@@ -1,0 +1,35 @@
+﻿
+@{
+    
+}
+<div id="travel" class="row row-cols-1 row-cols-md-3 g-4"></div>
+
+@section Scripts{
+    <script src="~/js/travel.js"></script>
+    <script>
+
+        const divtra = spots.CommonFormat.Section.map(tra => {
+            let des = tra.xbody;
+            if (!des.length < 100) 
+            {
+                des = des.slice(0, 99);
+            }
+            const img = Array.isArray(tra.file.img) ? tra.file.img[0].text : tra.file.img.text;
+            return (`<div class="col">
+            <div class="card h-100">
+              <img src="${img}" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title">${tra.stitle}</h5>
+                <p class="card-text">${des}</p>
+              </div>
+              <div class="card-footer">
+                <small class="text-body-secondary">${tra.address}</small>
+              </div>
+            </div>
+          </div>`)
+        
+        })
+        document.querySelector('#travel').innerHTML = divtra.join("");
+        
+    </script>
+}
