@@ -52,7 +52,7 @@ namespace MIST155.Controllers
             {
                 _user.Name = "guest";
             }
-            return Content($"你好{_user.Name},你{_user.Age}歲了,E-mail{_user.Email}", "text/plain", Encoding.UTF8);
+            return Content($"你好{_user.Name},你{_user.Age}歲了,E-mail是{_user.Email}", "text/plain", Encoding.UTF8);
         }
         public IActionResult CheckAccount(UserDTO _user) 
         {
