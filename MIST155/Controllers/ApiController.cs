@@ -56,16 +56,19 @@ namespace MIST155.Controllers
         }
         public IActionResult CheckAccount(UserDTO _user) 
         {
-            bool nameExists = _context.Members.Any(p => p.Name == _user.Name);
-            if (nameExists)
+            
+            // 使用 Entity Framework Core 的 LINQ 查詢檢查帳號是否存在
+            if (_context.Members.Any(p => p.Name == _user.Name))
             {
+                // 如果帳號存在，返回帳號已存在的訊息
                 return Content($"{_user.Name}帳號已存在");
             }
             else
             {
-                return Content($"{_user.Name}帳號已存在");
+                // 如果帳號不存在，返回帳號可以使用的訊息
+                return Content($"{_user.Name}可以使用");
             }
-            // 返回結果
+           
             
         }
         public IActionResult Image(int id=1)

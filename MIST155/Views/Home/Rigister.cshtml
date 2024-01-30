@@ -33,27 +33,22 @@
 @section Scripts
 {
     <script>
-         const txtname = document.querySelector("#userName");
-         const divwar = document.querySelector("divWarning");
-        const userNameInput = document.getElementById('userName');
-
-        
-        userNameInput.addEventListener('input', function () {
-            (async () => {
-                const txtname = document.getElementById('userName');
-                const url = `@Url.Content("~/api/CheckAccount")?Name=${txtname.value}`;
-                const response = await fetch(url);
-                const data = await response.text();
-                divwar.innerHTML = `${data}`;
-
-
-
-            })();
-            const currentInputValue = userNameInput.value;
-            console.log(currentInputValue);
-        });
-        
-
+        // 獲取帳號輸入框和警告訊息的元素
+        const userName = document.querySelector("#userName");
+        const divWarning = document.querySelector("#divWarning");
+        // 監聽帳號輸入框的 change 事件
+        userName.addEventListener('change', async () => {
+            // 獲取帳號輸入框的值
+            const uv = userName.value;
+            // 構建發送到後端 API 的 URL
+            const url = `@Url.Content("~/api/CheckAccount")?name=${uv}`;
+            // 使用 fetch 函數發送請求到後端
+            const response = await fetch(url);
+            // 等待後端返回的文本數據
+            const data = await response.text();
+            // 將後端返回的訊息顯示在警告訊息的元素中
+            divWarning.innerHTML = data;
+        })
 
         // (async () => {
         //     const url = '@Url.Content("~/api/register")?name=Tom&age=30&email=Tom@gmail.com';
