@@ -2,19 +2,24 @@
 @{
     
 }
+<!-- HTML部分: 一個空的div，id為travel -->
 <div id="travel" class="row row-cols-1 row-cols-md-3 g-4"></div>
 
 @section Scripts{
+    <!-- 引入travel.js腳本 -->
     <script src="~/js/travel.js"></script>
     <script>
-
+        // 從spots.CommonFormat.Section映射出divtra
         const divtra = spots.CommonFormat.Section.map(tra => {
             let des = tra.xbody;
+            // 如果描述長度大於100，則截取前100個字符
             if (!des.length < 100) 
             {
                 des = des.slice(0, 99);
             }
+            // 獲取圖片URL，如果是陣列則取第一個元素的text屬性，否則直接取text屬性
             const img = Array.isArray(tra.file.img) ? tra.file.img[0].text : tra.file.img.text;
+            // 返回一個包含卡片內容的HTML字符串
             return (`<div class="col">
             <div class="card h-100">
               <img src="${img}" class="card-img-top" alt="...">
@@ -29,6 +34,7 @@
           </div>`)
         
         })
+        // 將生成的HTML字符串插入到id為travel的div中
         document.querySelector('#travel').innerHTML = divtra.join("");
         
     </script>
