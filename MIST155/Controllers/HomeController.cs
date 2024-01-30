@@ -19,7 +19,15 @@ namespace MIST155.Controllers
         {
             return View();
         }
+        public IActionResult Rigister()
+        {
+            return View();
+        }
         public IActionResult Jsontest()
+        {
+            return View();
+        }
+        public IActionResult First()
         {
             return View();
         }
