@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewData["Title"] = "Image";
+}
+
+<h1>Image</h1>
+<img id="img1" class="img-thumbnail w-25" />
+
+@section Scripts{
+    <script>
+        const image = document.querySelector('#img1');
+            (async () => {
+                const url = `@Url.Content("~/api/image/1")`;
+                const response = await fetch(url);
+                const data = await response.blob()  //response.blob()圖片用
+                image.src = URL.createObjectURL(data);
+            })();
+    </script>
+}
+

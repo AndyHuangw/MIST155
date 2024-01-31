@@ -26,6 +26,20 @@ namespace MIST155.Controllers
             var cities = _context.Addresses.Select(x => x.City).Distinct();
             return Json(cities);
         }
+        public IActionResult Districts(string city)
+        {
+            var districts = _context.Addresses.Where(a => a.City==city).Select(a => a.SiteId).Distinct();
+            return Json(districts);
+        }
+        public IActionResult Road(string district)
+        {
+            var road = _context.Addresses.Where(a => a.SiteId== district).Select(a=>a.Road).Distinct();
+            return Json(road);
+        }
+        public IActionResult Address()
+        {
+            return View();
+        }
         
         public IActionResult Content()
         {
