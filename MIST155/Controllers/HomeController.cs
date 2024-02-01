@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MIST155.Models;
+using MIST155.Models.DTO;
 using System.Diagnostics;
 
 namespace MIST155.Controllers
@@ -36,7 +37,14 @@ namespace MIST155.Controllers
         {
             return View();
         }
-
+        public IActionResult Spot() 
+        {
+            return View();
+        }
+        public IActionResult AutoComplete()
+        {
+            return View();
+        }
         public IActionResult Image()
         {
             return View();

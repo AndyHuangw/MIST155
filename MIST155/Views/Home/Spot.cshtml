@@ -1,0 +1,89 @@
+﻿
+@{
+    ViewData["Title"] = "Spot";
+}
+
+<h1>Spot</h1>
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination" id="ul1">                
+            </ul>
+        </nav>
+    </div>
+    <div class="col-3">
+        <input type="search" class="form-control" placeholder="景點搜尋" id="inputKeyword" />
+    </div>
+</div>
+<div class="row row-cols-1 row-cols-md-3 g-4" id="div1">
+</div>
+@section Scripts{
+    <script>
+        // 預設的搜尋資料
+        const div1=document.querySelector("#div1")
+        const ulPaging = document.querySelector('#ul1');
+        const inpKeyword = document.querySelector('#inputKeyword');
+        const searchData = {
+            "categoryId":0,
+            "keyword":"北投",
+            "page":1,
+            "pageSize": 9,
+            "sortType":"asc",
+            "sortBy":""
+        }
+        // 定義一個異步函數，用於載入景點數據
+        const loadSpots = async () => {
+            // 使用 fetch 函數發送 POST 請求到指定的 API 端點
+            const response = await fetch('@Url.Content("~/api/spot")', {
+                "method": "POST", // 指定請求方法為 POST
+                "body": JSON.stringify(searchData),// 將搜尋資料轉換為 JSON 字串作為請求主體
+                "headers": { "Content-Type": "application/json" } // 指定請求headers的 Content-Type 為 application/json
+            });
+            // 解析從伺服器返回的 JSON 數據
+            const datas = await response.json();
+            const divSpots = datas.spotsResult.map(spot => {
+                const { spotId, spotTitle, address, spotDescription, spotImage } = spot;
+                return (`<div class="col">
+                            <div class="card h-100">
+                                              <img src="${spotImage}" class="card-img-top" alt="${spotTitle}">
+                              <div class="card-body">
+                                                <h5 class="card-title">${spotTitle}</h5>
+                                                                <p class="card-text">${spotDescription.length <= 100 ? spotDescription : spotDescription.substring(0, 100)}</p>
+                              </div>
+                              <div class="card-footer">
+                                        <small class="text-body-secondary">${address}</small>
+                              </div>
+                            </div>
+                          </div>`)
+            })
+            div1.innerHTML = divSpots.join("");
+
+
+
+            let liPaging = "";
+            for (let i = 1, max = datas.totalPages; i <= max; i++) {
+                liPaging += ` <li class="page-item" onclick="pagingHandler(${i})"><a class="page-link" href="#">${i}</a></li>`
+            }
+            ulPaging.innerHTML = liPaging;
+            
+        }
+        const pagingHandler = page => {
+            searchData.page = page;
+            loadSpots();
+        }
+        //關鍵字搜尋
+        inpKeyword.addEventListener('keydown', event => {
+            // console.log(event.which); //Enter => 13
+            if (event.which === 13) {
+                searchData.keyword = event.target.value;
+                searchData.page = 1;
+                loadSpots();
+            }
+        })
+        loadSpots();
+        
+        
+    </script>
+}
+

@@ -12,45 +12,61 @@
 </select>
 @section Scripts{
     <script>
+        // 獲取城市、行政區和道路的選擇元素
         const selcity = document.querySelector('#selcity');
         const seldistricts = document.querySelector('#seldistricts');
         const selroad = document.querySelector('#selroad');
+        // 當頁面加載時執行的立即執行函數(IIFE)
         (async () => {
+            // 發送請求獲取城市數據
             const response = await fetch(`@Url.Content("~/api/Cities")`);
             const datas = await response.json();
+            // 將城市數據轉換為選項
             const optCities = datas.map(city => {
                 return (`<option value=${city}>${city}</option>`)
 
             });
+            // 將選項添加到城市下拉列表
             selcity.innerHTML = optCities.join("");
+            // 載入行政區數據方法
             loadDistricts();
         })();
-
+        // 載入行政區數據的函數
         const loadDistricts = (async ()=>{
+            // 獲取選擇的城市
             const city = selcity.options[selcity.selectedIndex].value;
+            // 構建 URL 並發送請求獲取行政區數據
             const url = `@Url.Content("~/api/Districts")?city=${city}`;
              const response = await fetch(url);
              const datas = await response.json();
+            // 將行政區數據轉換為選項
             const optDistricts = datas.map(district => `<option value =${district}>${district}</option>`);
+            // 將選項添加到行政區下拉列表
             seldistricts.innerHTML = optDistricts.join("");
-
+            // 載入道路數據方法
             loadRoad();
             // console.log(optDistricts);
         })
+        // 當城市選擇發生變化時觸發載入行政區數據的函數
         selcity.addEventListener('change', loadDistricts)
-        
 
+        // 載入道路數據的函數
         const loadRoad = (async () => {
+            // 獲取選擇的行政區
             const district = seldistricts.options[seldistricts.selectedIndex].value;
+            // 構建 URL 並發送請求獲取道路數據
             const url = `@Url.Content("~/api/Road")?district=${district}`;
             const response = await fetch(url);
             const datas = await response.json();
+            // 將道路數據轉換為選項
             const optRoad = datas.map(road => `<option value =${road}>${road}</option>`);
+            // 將選項添加到道路下拉列表
             selroad.innerHTML = optRoad.join("");
 
 
             // console.log(optDistricts);
         })
+        // 當行政區選擇發生變化時觸發載入道路數據的函數
         seldistricts.addEventListener('change', loadRoad)
         
         
