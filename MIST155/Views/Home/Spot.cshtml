@@ -3,27 +3,48 @@
     ViewData["Title"] = "Spot";
 }
 
-<h1>Spot</h1>
+<h1>台北市景點</h1>
 <div class="row">
-    <div class="col-3"></div>
-    <div class="col-6">
+    <div class="col-3">
+        <select class="form-select" aria-label="Default select example" id="sopage">
+            <option value="0">每頁顯示9筆資料</option>
+            <option value="1">每頁顯示1筆資料</option>
+            <option value="3">每頁顯示3筆資料</option>
+            <option value="6">每頁顯示6筆資料</option>
+        </select>
+    </div>
+    <div class="col-4">
         <nav aria-label="Page navigation example">
-            <ul class="pagination" id="ul1">                
+            <ul class="pagination" id="ul1">
             </ul>
         </nav>
+    </div>
+    <div class="col-2">
+        <select class="form-select" aria-label="Default select example" id="stchange">
+            <option value="0">景點編號升冪</option>
+            <option value="1">景點編號降冪</option>
+        </select>
     </div>
     <div class="col-3">
         <input type="search" class="form-control" placeholder="景點搜尋" id="inputKeyword" />
     </div>
 </div>
+<div class="row justify-content-center">
+    <div class="btn-group" role="group" aria-label="Basic outlined example" id="categorycg">
+    </div>
+</div>
 <div class="row row-cols-1 row-cols-md-3 g-4" id="div1">
 </div>
+
 @section Scripts{
     <script>
         // 預設的搜尋資料
         const div1=document.querySelector("#div1")
         const ulPaging = document.querySelector('#ul1');
         const inpKeyword = document.querySelector('#inputKeyword');
+        const sopage = document.querySelector('#sopage')
+        const stchange = document.querySelector('#stchange')
+        const categorycg = document.querySelector('#categorycg')
         const searchData = {
             "categoryId":0,
             "keyword":"北投",
@@ -42,6 +63,7 @@
             });
             // 解析從伺服器返回的 JSON 數據
             const datas = await response.json();
+            console.log(datas)
             const divSpots = datas.spotsResult.map(spot => {
                 const { spotId, spotTitle, address, spotDescription, spotImage } = spot;
                 return (`<div class="col">
@@ -56,10 +78,51 @@
                               </div>
                             </div>
                           </div>`)
-            })
+            });
             div1.innerHTML = divSpots.join("");
-
-
+            //種類選擇按鈕
+            const divcate = datas.spotsResult.map(cate => {
+                const { categoryId, categoryname }=cate;
+                
+                return (`<button type="button" class="btn btn-outline-primary" value="${categoryId}">${categoryname}</button>`)
+            });
+            console.log(divcate)
+            categorycg.innerHTML = divcate.join("");
+            //選擇顯示幾筆資料
+            sopage.addEventListener('change',function(){
+                const selectedValue = sopage.value;
+                switch (selectedValue) {
+                    case '0':
+                        searchData.pageSize = 9;
+                        break;
+                    case '1':
+                        searchData.pageSize = 1;
+                        break;
+                    case '3':
+                        searchData.pageSize = 3;
+                        break;
+                    case '6':
+                        searchData.pageSize = 6;
+                        break;
+                    default:
+                       
+                        break;
+                }
+                loadSpots();
+            })
+            //更改升冪降冪
+            stchange.addEventListener('change', function(){
+                const selectedValue = stchange.value;
+                switch (selectedValue) {
+                    case '0':
+                        searchData.sortType = "asc";
+                        break;
+                    case '1':
+                        searchData.sortType = "desc";
+                        break;
+                }
+                loadSpots();
+            })
 
             let liPaging = "";
             for (let i = 1, max = datas.totalPages; i <= max; i++) {

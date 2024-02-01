@@ -117,8 +117,9 @@ namespace MIST155.Controllers
            
             // 將接收到的 SearchDTO 物件轉換為 JSON 格式並返回
             var spots = _search.categoryId == 0 ? _context.SpotImagesSpots : _context.SpotImagesSpots.Where(s=>s.CategoryId == _search.categoryId);
+            var cate = _context.Categories;
             //關鍵字搜尋
-            if(!string.IsNullOrEmpty(_search.keyword))
+            if (!string.IsNullOrEmpty(_search.keyword))
             {
                 // 過濾條件：場景標題包含搜尋關鍵字或場景描述包含搜尋關鍵字
                 spots = spots.Where(s => s.SpotTitle.Contains(_search.keyword) || s.SpotDescription.Contains(_search.keyword));
@@ -154,6 +155,7 @@ namespace MIST155.Controllers
             SpotsPagingDTO spotsPaging = new SpotsPagingDTO();
             spotsPaging.TotalPages = totalPage;
             spotsPaging.SpotsResult = spots.ToList();
+            spotsPaging.CateResult = cate.ToList();
             return Json(spotsPaging);
 
             //return Json(spots);

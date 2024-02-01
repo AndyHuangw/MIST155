@@ -8,6 +8,7 @@
         public string? keyword  { get; set; }
         public string? sortType { get; set; }
         public string? sortBy { get; set; }
+        public string? categoryname {  get; set; }
 
     }
 }
