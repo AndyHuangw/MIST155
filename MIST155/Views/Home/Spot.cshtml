@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Spot";
 }
 
@@ -36,22 +35,22 @@
 <div class="row row-cols-1 row-cols-md-3 g-4" id="div1">
 </div>
 
-@section Scripts{
+@section Scripts {
     <script>
         // 預設的搜尋資料
-        const div1=document.querySelector("#div1")
+        const div1 = document.querySelector("#div1")
         const ulPaging = document.querySelector('#ul1');
         const inpKeyword = document.querySelector('#inputKeyword');
         const sopage = document.querySelector('#sopage')
         const stchange = document.querySelector('#stchange')
         const categorycg = document.querySelector('#categorycg')
         const searchData = {
-            "categoryId":0,
-            "keyword":"北投",
-            "page":1,
+            "categoryId": 0,
+            "keyword": "",
+            "page": 1,
             "pageSize": 9,
-            "sortType":"asc",
-            "sortBy":""
+            "sortType": "",
+            "sortBy": ""
         }
         // 定義一個異步函數，用於載入景點數據
         const loadSpots = async () => {
@@ -67,29 +66,38 @@
             const divSpots = datas.spotsResult.map(spot => {
                 const { spotId, spotTitle, address, spotDescription, spotImage } = spot;
                 return (`<div class="col">
-                            <div class="card h-100">
-                                              <img src="${spotImage}" class="card-img-top" alt="${spotTitle}">
-                              <div class="card-body">
-                                                <h5 class="card-title">${spotTitle}</h5>
-                                                                <p class="card-text">${spotDescription.length <= 100 ? spotDescription : spotDescription.substring(0, 100)}</p>
-                              </div>
-                              <div class="card-footer">
-                                        <small class="text-body-secondary">${address}</small>
-                              </div>
-                            </div>
-                          </div>`)
+                                    <div class="card h-100">
+                                                      <img src="${spotImage}" class="card-img-top" alt="${spotTitle}">
+                                      <div class="card-body">
+                                                        <h5 class="card-title">${spotTitle}</h5>
+                                                                        <p class="card-text">${spotDescription.length <= 100 ? spotDescription : spotDescription.substring(0, 100)}</p>
+                                      </div>
+                                      <div class="card-footer">
+                                                <small class="text-body-secondary">${address}</small>
+                                      </div>
+                                    </div>
+                                  </div>`)
             });
             div1.innerHTML = divSpots.join("");
             //種類選擇按鈕
-            const divcate = datas.spotsResult.map(cate => {
-                const { categoryId, categoryname }=cate;
-                
-                return (`<button type="button" class="btn btn-outline-primary" value="${categoryId}">${categoryname}</button>`)
+            // const catingHandler = categoryId => {
+            //     // searchData.categoryId = categoryId;
+            //     // loadSpots();
+            //     console.log(categoryId)
+            // }
+            const divcate = datas.cateResult.map(cate => {
+                const { categoryId, categoryName } = cate;
+
+                return (`<button type="button" class="btn btn-outline-primary" onclick="catingHandler(${categoryId})">${categoryName}</button>`)
             });
             console.log(divcate)
+            // console.log(divcate)
             categorycg.innerHTML = divcate.join("");
+            //種類按鈕顯示
+            
+            console.log(catingHandler)
             //選擇顯示幾筆資料
-            sopage.addEventListener('change',function(){
+            sopage.addEventListener('change', function () {
                 const selectedValue = sopage.value;
                 switch (selectedValue) {
                     case '0':
@@ -105,13 +113,13 @@
                         searchData.pageSize = 6;
                         break;
                     default:
-                       
+
                         break;
                 }
                 loadSpots();
             })
             //更改升冪降冪
-            stchange.addEventListener('change', function(){
+            stchange.addEventListener('change', function () {
                 const selectedValue = stchange.value;
                 switch (selectedValue) {
                     case '0':
@@ -129,12 +137,13 @@
                 liPaging += ` <li class="page-item" onclick="pagingHandler(${i})"><a class="page-link" href="#">${i}</a></li>`
             }
             ulPaging.innerHTML = liPaging;
-            
+
         }
         const pagingHandler = page => {
             searchData.page = page;
-            loadSpots();
+            loadSpots();          
         }
+        console.log(pagingHandler)
         //關鍵字搜尋
         inpKeyword.addEventListener('keydown', event => {
             // console.log(event.which); //Enter => 13
@@ -145,8 +154,14 @@
             }
         })
         loadSpots();
-        
-        
+
+
+        const catingHandler = categoryId => {
+            searchData.categoryId = categoryId;
+            loadSpots();
+            // console.log(categoryId)
+        }
+
     </script>
 }
 

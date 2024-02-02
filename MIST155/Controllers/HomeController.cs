@@ -32,6 +32,10 @@ namespace MIST155.Controllers
         {
             return View();
         }
+        public IActionResult Cors()
+        {
+            return View();
+        }
 
         public IActionResult Privacy()
         {
